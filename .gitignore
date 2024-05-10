@@ -1,2 +1,4 @@
 vendor/
 config/config.php
+generated/*
+!generated/.gitkeep

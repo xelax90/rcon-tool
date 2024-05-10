@@ -2,6 +2,7 @@
 <?php
 namespace RconManager;
 
+chdir (__DIR__);
 require __DIR__ . '/vendor/autoload.php';
 
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
@@ -18,6 +19,8 @@ $container = new ServiceManager([
 $application = new Application();
 $application->setCommandLoader(new ContainerCommandLoader($container, [
     'rcon:list-servers' => Command\ListServersCommand::class,
+    'rcon:generate-scripts' => Command\GenerateScriptsCommand::class,
+    'rcon:check-update' => Command\CheckUpdateCommand::class,
     'rcon:ark:stop-server' => Command\Ark\StopServerCommand::class,
     'rcon:ark:saveworld' => Command\Ark\SaveWorldCommand::class,
     'rcon:vrising:stop-server' => Command\VRising\StopServerCommand::class,

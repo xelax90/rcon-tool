@@ -7,10 +7,28 @@ return [
         //     'port' => 0, // RCON Port
         //     'password' => '', // RCON Password
         // ],
+        // 'SERVERNAME' => [
+        //     'host' => '', // Host IP
+        //     'port' => 0, // RCON Port
+        //     'password' => '', // RCON Password
+        //     // Add Management configuration for managed local servers
+        //     'management' => [
+        //         'localInstallDir' => '', // steamcmd force_install_dir parameter
+        //         'steamAppId' => , // steamcmd APP ID
+        //         // Server-Type Specific configuration
+        //         'vrising' => [
+        //             'serverId' => 'MyServer', // Server name used to create save-data directory in V-Rising
+        //         ],
+        //     ],
+        // ],
     ],
     'rcon' => [
         'timeout' => 3,
     ],
+    // For managing local servers you must provide the path to steamcmd.exe
+    // 'steamcmd' => [
+    //     'path' => 'C:\Servers\steamcmd\steamcmd.exe',
+    // ],
     'scripts' => [
         'shutdown' => [
             'intervals' => [

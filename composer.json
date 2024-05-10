@@ -4,7 +4,10 @@
         "thedudeguy/rcon": "^1.0",
         "symfony/console": "^7.0",
         "laminas/laminas-servicemanager": "^4.1",
-        "xelax90/steam-condenser": "dev-master"
+        "xelax90/steam-condenser": "dev-master",
+        "mustache/mustache": "^2.14",
+        "symfony/filesystem": "^7.0",
+        "mikehaertl/php-shellcommand": "^1.7"
     },
     "repositories": [
         {

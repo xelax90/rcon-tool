@@ -1,0 +1,22 @@
+@echo off
+SET SV_ID={{serverId}}
+SET STEAMCMD={{steamcmdPath}}
+SET APP_INSTALL_DIR={{installDir}}
+
+echo Updating V-Rising
+CALL !STEAMCMD! +force_install_dir !APP_INSTALL_DIR! +login anonymous +app_update 1829350 validate +quit
+
+set SteamAppId=1604030
+
+REM Get date/time in a consistent format no matter what locale.
+for /f "tokens=2 delims==" %%a in ('wmic OS Get localdatetime /value') do set "dt=%%a"
+set "YYYY=%dt:~0,4%" & set "MM=%dt:~4,2%" & set "DD=%dt:~6,2%"
+set "HH=%dt:~8,2%" & set "MIN=%dt:~10,2%" & set "SEC=%dt:~12,2%"
+set "TIMESTAMP=%YYYY%%MM%%DD%_%HH%%MIN%%SEC%"
+
+echo "Starting V Rising Dedicated Server - PRESS CTRL-C to exit"
+
+@echo on
+C:\Servers\Nyntology-VRising\VRisingServer.exe ^
+ -persistentDataPath C:\Servers\SaveData\VRising-!SV_ID!\save-data ^
+ -logFile "C:\Servers\SaveData\VRising-!SV_ID!\logs\VRisingServer-!TIMESTAMP!.log" 1>nul

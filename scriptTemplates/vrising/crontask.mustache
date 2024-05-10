@@ -1,0 +1,10 @@
+@echo off
+php {{applicationPath}}\application.php rcon:check-update {{server}}
+
+if %errorlevel%==1 (
+    echo "Stopping Server"
+    php {{applicationPath}} rcon:vrising:stop-server {{server}}
+    CALL {{applicationPath}}\generated\{{server}}\startServer.bat
+) else (
+    echo "OK"
+)
