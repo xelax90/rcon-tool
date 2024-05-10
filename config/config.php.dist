@@ -1,0 +1,39 @@
+<?php
+return [
+    'rcon_servers' => [
+        // Configure servers here
+        // 'SERVERNAME' => [
+        //     'host' => '', // Host IP
+        //     'port' => 0, // RCON Port
+        //     'password' => '', // RCON Password
+        // ],
+    ],
+    'rcon' => [
+        'timeout' => 3,
+    ],
+    'scripts' => [
+        'shutdown' => [
+            'intervals' => [
+                15*60,
+                10*60,
+                5*60,
+                3*60,
+                2*60,
+                1*60,
+                30,
+                20,
+                10,
+                5,
+                4,
+                3,
+                2,
+                1,
+            ],
+        ],
+        'saveworld' => [
+            'showMessage' => true,
+            'message' => 'A world save is about to be performed',
+            'messageLeadTime' => 10,
+        ],
+    ],
+];
