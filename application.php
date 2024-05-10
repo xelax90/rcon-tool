@@ -11,6 +11,9 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 
 $container = new ServiceManager([
+    'factories' => [
+        Service\ScriptGenerator::class => Service\Factory\ScriptGeneratorFactory::class,
+    ],
     'abstract_factories' => [
         ReflectionBasedAbstractFactory::class,
     ]
