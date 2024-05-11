@@ -28,6 +28,7 @@ $application->setCommandLoader(new ContainerCommandLoader($container, [
     'rcon:ark:saveworld' => Command\Ark\SaveWorldCommand::class,
     'rcon:vrising:stop-server' => Command\VRising\StopServerCommand::class,
     'rcon:vrising:list-players' => Command\VRising\ListPlayersCommand::class,
+    'rcon:vrising:init-local-server' => Command\VRising\InitLocalServerCommand::class,
 ]));
 
 $application->run();
