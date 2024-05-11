@@ -1,5 +1,4 @@
 @echo off
-SET SV_ID={{serverId}}
 SET STEAMCMD={{steamcmdPath}}
 SET APP_INSTALL_DIR={{installDir}}
 
@@ -18,5 +17,5 @@ echo "Starting V Rising Dedicated Server - PRESS CTRL-C to exit"
 
 @echo on
 C:\Servers\Nyntology-VRising\VRisingServer.exe ^
- -persistentDataPath C:\Servers\SaveData\VRising-!SV_ID!\save-data ^
- -logFile "C:\Servers\SaveData\VRising-!SV_ID!\logs\VRisingServer-!TIMESTAMP!.log" 1>nul
+ -persistentDataPath {{saveDataDir}}\save-data ^
+ -logFile "{{saveDataDir}}\logs\VRisingServer-!TIMESTAMP!.log" 1>nul

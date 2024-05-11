@@ -28,18 +28,31 @@ class VRising implements ScriptGenerator
         $this->generateCrontaskScript($server);
     }
 
-    protected function validateServerConfig(string $server)
+    protected function getValidatedServerConfig(string $server)
     {
         $serverInfo = $this->config->getServerConfig($server);
-        if (! isset($serverInfo['management'])) {
+        $managementConfig = $this->config->getConfig()['management'] ?? [];
+        if (! isset($serverInfo['management']) && empty($managementConfig)) {
             throw new RuntimeException(sprintf('No management configuration in server %s', $server));
         }
+
+        $mustache = new Mustache_Engine();
+
         $installDir = $serverInfo['management']['localInstallDir'] ?? null;
-        $serverId = $serverInfo['management']['vrising']['serverId'] ?? null;
+        if (! $installDir) {
+            $installDirTemplate = $managementConfig['vrising']['localInstallDirTemplate'] ?? null;
+            $installDir = $mustache->render($installDirTemplate, ['server' => $server]);
+        }
         if (! $installDir) {
             throw new RuntimeException(sprintf('Invalid Install Dir in server %s', $server));
         }
-        if (! $serverId) {
+
+        $saveDataDir = $serverInfo['management']['vrising']['saveDataDir'] ?? null;
+        if (! $saveDataDir) {
+            $saveDataDirTemplate = $managementConfig['vrising']['saveDataDirTemplate'] ?? null;
+            $saveDataDir = $mustache->render($saveDataDirTemplate, ['server' => $server]);
+        }
+        if (! $saveDataDir) {
             throw new RuntimeException(sprintf('Invalid V Rising Server ID in server %s', $server));
         }
 
@@ -47,22 +60,22 @@ class VRising implements ScriptGenerator
         if (! $steamCmdPath) {
             throw new RuntimeException('Steam CMD Path not configured');
         }
+
+        return [
+            'installDir' => $installDir,
+            'saveDataDir' => $saveDataDir,
+            'steamcmdPath' => $steamCmdPath,
+        ];
     }
 
     protected function generateStartServerScript(string $server)
     {
-        $this->validateServerConfig($server);
-
-        $serverInfo = $this->config->getServerConfig($server);
-
-        $installDir = $serverInfo['management']['localInstallDir'] ?? null;
-        $serverId = $serverInfo['management']['vrising']['serverId'] ?? null;
-        $steamCmdPath = $this->config->getConfig()['steamcmd']['path'] ?? null;
+        $validatedConfig = $this->getValidatedServerConfig($server);
 
         $params = [
-            'serverId' => $serverId,
-            'steamcmdPath' => $steamCmdPath,
-            'installDir' => $installDir,
+            'steamcmdPath' => $validatedConfig['steamcmdPath'],
+            'installDir' => $validatedConfig['installDir'],
+            'saveDataDir' => $validatedConfig['saveDataDir'],
         ];
         $templateContents = file_get_contents('scriptTemplates/vrising/startServer.mustache');
 
@@ -80,14 +93,6 @@ class VRising implements ScriptGenerator
 
     protected function generateCrontaskScript(string $server)
     {
-        $this->validateServerConfig($server);
-
-        $serverInfo = $this->config->getServerConfig($server);
-
-        $installDir = $serverInfo['management']['localInstallDir'] ?? null;
-        $serverId = $serverInfo['management']['vrising']['serverId'] ?? null;
-        $steamCmdPath = $this->config->getConfig()['steamcmd']['path'] ?? null;
-
         $params = [
             'server' => $server,
             'applicationPath' => Path::canonicalize(getcwd()),
