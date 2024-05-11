@@ -3,6 +3,7 @@ if EXIST %~dp0\crontask.lock (
     exit
 )
 
+copy /y NUL %~dp0\crontask.lock >NUL
 php {{applicationPath}}\application.php rcon:check-update {{server}}
 
 if %errorlevel%==1 (

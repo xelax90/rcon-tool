@@ -95,7 +95,7 @@ class VRising implements ScriptGenerator
     {
         $params = [
             'server' => $server,
-            'applicationPath' => Path::canonicalize(getcwd()),
+            'applicationPath' => str_replace('/', DIRECTORY_SEPARATOR, Path::canonicalize(getcwd())),
         ];
         $templateContents = file_get_contents('scriptTemplates/vrising/crontask.mustache');
 
