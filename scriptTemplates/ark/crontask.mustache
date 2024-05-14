@@ -1,0 +1,17 @@
+@echo off
+if EXIST %~dp0\crontask.lock (
+    exit
+)
+
+copy /y NUL %~dp0\crontask.lock >NUL
+php {{applicationPath}}\application.php rcon:check-update {{server}}
+
+if %errorlevel%==1 (
+    echo "Stopping Server"
+    php {{applicationPath}} rcon:ark:stop-server {{server}}
+    START ARKSERVER {{applicationPath}}\generated\{{server}}\startServer.bat
+) else (
+    echo "OK"
+)
+
+del %~dp0\crontask.lock

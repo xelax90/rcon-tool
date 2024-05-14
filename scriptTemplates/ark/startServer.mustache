@@ -1,0 +1,12 @@
+@echo off
+SET STEAMCMD={{{steamcmdPath}}}
+SET APP_INSTALL_DIR={{{installDir}}}
+
+echo Updating ARK: Survival Ascended
+CALL !STEAMCMD! +force_install_dir !APP_INSTALL_DIR! +login anonymous +app_update 2430930 validate +quit
+
+echo Starting ARK: Survival Ascended Server
+
+cd /d !APP_INSTALL_DIR!
+start ShooterGame\Binaries\Win64\ArkAscendedServer.exe ^
+  {{serverMap}}?listen{{{questionmarkParameters}}} {{{serverStartParameters}}}

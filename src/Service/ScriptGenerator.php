@@ -2,6 +2,7 @@
 namespace RconManager\Service;
 
 use Laminas\ServiceManager\ServiceManager;
+use RconManager\ScriptGenerator\Ark;
 use RconManager\ScriptGenerator\ScriptGenerator as ScriptGeneratorInterface;
 use RconManager\ScriptGenerator\VRising;
 use RuntimeException;
@@ -11,7 +12,10 @@ class ScriptGenerator
     protected $generators = [
         RconService::SERVER_TYPE_VRISING => [
             VRising::class,
-        ]
+        ],
+        RconService::SERVER_TYPE_ARK => [
+            Ark::class,
+        ],
     ];
 
     public function __construct(
