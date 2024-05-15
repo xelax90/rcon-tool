@@ -5,6 +5,9 @@ SET APP_INSTALL_DIR={{{installDir}}}
 echo Updating ARK: Survival Ascended
 CALL !STEAMCMD! +force_install_dir !APP_INSTALL_DIR! +login anonymous +app_update 2430930 validate +quit
 
+copy %~dp0\Game.ini !APP_INSTALL_DIR!\ShooterGame\Saved\Config\WindowsServer\Game.ini
+copy %~dp0\GameUserSettings.ini !APP_INSTALL_DIR!\ShooterGame\Saved\Config\WindowsServer\GameUserSettings.ini
+
 echo Starting ARK: Survival Ascended Server
 
 cd /d !APP_INSTALL_DIR!
