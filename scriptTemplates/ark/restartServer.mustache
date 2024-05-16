@@ -10,6 +10,6 @@ copy /y NUL %~dp0\crontask.lock >NUL
 
 echo "Stopping Server"
 php {{applicationPath}}\application.php rcon:ark:stop-server {{server}}
-START ARKSERVER {{applicationPath}}\generated\{{server}}\startServer.bat
+{{applicationPath}}\generated\{{server}}\startServer.bat
 
 del %~dp0\crontask.lock
