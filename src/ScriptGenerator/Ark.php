@@ -27,6 +27,7 @@ class Ark implements ScriptGenerator
         }
         $this->generateStartServerScript($server);
         $this->generateCrontaskScript($server);
+        $this->generateRestartScript($server);
         $this->generateConfigs($server);
     }
 
@@ -153,6 +154,26 @@ class Ark implements ScriptGenerator
 
         $outputDir = Path::join('generated', $server);
         $outputPath = Path::join($outputDir, 'crontask.bat');
+
+        if (! is_dir($outputDir)) {
+            mkdir($outputDir, 0777, true);
+        }
+        file_put_contents($outputPath, $scriptContent);
+    }
+
+    protected function generateRestartScript(string $server)
+    {
+        $params = [
+            'server' => $server,
+            'applicationPath' => str_replace('/', DIRECTORY_SEPARATOR, Path::canonicalize(getcwd())),
+        ];
+        $templateContents = file_get_contents('scriptTemplates/ark/restartServer.mustache');
+
+        $mustache = new Mustache_Engine();
+        $scriptContent = $mustache->render($templateContents, $params);
+
+        $outputDir = Path::join('generated', $server);
+        $outputPath = Path::join($outputDir, 'restartServer.bat');
 
         if (! is_dir($outputDir)) {
             mkdir($outputDir, 0777, true);
