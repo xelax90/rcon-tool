@@ -24,6 +24,7 @@ $application->setCommandLoader(new ContainerCommandLoader($container, [
     'rcon:list-servers' => Command\ListServersCommand::class,
     'rcon:generate-scripts' => Command\GenerateScriptsCommand::class,
     'rcon:check-update' => Command\CheckUpdateCommand::class,
+    'rcon:check-is-running' => Command\CheckServerRunning::class,
     'rcon:ark:list-players' => Command\Ark\ListPlayersCommand::class,
     'rcon:ark:stop-server' => Command\Ark\StopServerCommand::class,
     'rcon:ark:saveworld' => Command\Ark\SaveWorldCommand::class,

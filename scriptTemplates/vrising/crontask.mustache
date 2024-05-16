@@ -8,7 +8,7 @@ php {{applicationPath}}\application.php rcon:check-update {{server}}
 
 if %errorlevel%==1 (
     echo "Stopping Server"
-    php {{applicationPath}} rcon:vrising:stop-server {{server}}
+    php {{applicationPath}}\application.php rcon:vrising:stop-server {{server}}
     START "VRISING" {{applicationPath}}\generated\{{server}}\startServer.bat
 ) else (
     echo "OK"
