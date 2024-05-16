@@ -8,7 +8,7 @@ php {{applicationPath}}\application.php rcon:check-update {{server}}
 
 if %errorlevel%==1 (
     echo "Stopping Server"
-    php {{applicationPath}} rcon:ark:stop-server {{server}}
+    php {{applicationPath}}\application.php rcon:ark:stop-server {{server}}
     START ARKSERVER {{applicationPath}}\generated\{{server}}\startServer.bat
 ) else (
     echo "OK"

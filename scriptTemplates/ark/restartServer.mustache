@@ -9,7 +9,7 @@ if EXIST %~dp0\crontask.lock (
 copy /y NUL %~dp0\crontask.lock >NUL
 
 echo "Stopping Server"
-php {{applicationPath}} rcon:ark:stop-server {{server}}
+php {{applicationPath}}\application.php rcon:ark:stop-server {{server}}
 START ARKSERVER {{applicationPath}}\generated\{{server}}\startServer.bat
 
 del %~dp0\crontask.lock
