@@ -28,7 +28,7 @@ class ListPlayersCommand extends AbstractServerCommand
             // the command description shown when running "php bin/console list"
             ->setDescription('List online players')
             // the command help shown when running the command with the "--help" option
-            ->setHelp('Not yet implemented')
+            ->setHelp('List currently connected players. Server must have Steam API enabled.')
         ;
         parent::configure();
     }

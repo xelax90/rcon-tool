@@ -10,15 +10,16 @@ use Thedudeguy\Rcon;
 
 class StopServer extends AbstractScript
 {
-    protected $stopImmediately = false;
+    protected bool $stopImmediately = false;
 
     public function __construct(protected Config $config)
     {
     }
 
-    public function setStopImmediately(bool $stopImmediately)
+    public function setStopImmediately(bool $stopImmediately): static
     {
         $this->stopImmediately = $stopImmediately;
+        return $this;
     }
 
     public function run(Rcon $rcon): void

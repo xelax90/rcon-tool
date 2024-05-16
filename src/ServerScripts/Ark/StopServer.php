@@ -2,6 +2,7 @@
 namespace RconManager\ServerScripts\Ark;
 
 use RconManager\ServerCommand\Ark\DoExit;
+use RconManager\ServerCommand\Ark\ListpLayers;
 use RconManager\ServerCommand\Ark\SaveWorld;
 use RconManager\ServerCommand\Ark\ServerChat;
 use RconManager\ServerCommand\Ark\ServerChatWithTemplate;
@@ -11,16 +12,40 @@ use Thedudeguy\Rcon;
 
 class StopServer extends AbstractScript
 {
+    protected bool $stopImmediately = false;
+
     public function __construct(protected Config $config)
     {
+    }
+
+    public function setStopImmediately(bool $stopImmediately): static
+    {
+        $this->stopImmediately = $stopImmediately;
+        return $this;
     }
 
     public function run(Rcon $rcon): void
     {
         $config = $this->config->getConfig()['scripts']['shutdown'];
         
-        $messageIntervals = $config['intervals'];
-        rsort($messageIntervals, SORT_NUMERIC);
+        $stopImmediately = $this->stopImmediately;
+        if (! $stopImmediately) {
+            // Faster shutdown if no players are connected
+            $playerList = $this->runCommand($rcon, new ListpLayers());
+            if ($playerList === 'No Players Connected') {
+                $stopImmediately = true;
+            }
+        }
+
+        if ($stopImmediately) {
+            $messageIntervals = [];
+        } else {
+            $messageIntervals = $config['intervals'];
+            rsort($messageIntervals, SORT_NUMERIC);
+        }
+        if (empty($messageIntervals)) {
+            $messageIntervals = [10, 5, 4, 3, 2, 1];
+        }
 
         $this->runCommand($rcon, new SaveWorld());
 
@@ -34,9 +59,14 @@ class StopServer extends AbstractScript
             sleep($diff);
         }
 
+        $this->runCommand($rcon, new ServerChat(sprintf('Final Saveworld 1')));
         $this->runCommand($rcon, new SaveWorld());
+        sleep(5);
+        $this->runCommand($rcon, new ServerChat(sprintf('Final Saveworld 2')));
+        $this->runCommand($rcon, new SaveWorld());
+        sleep(5);
         $this->runCommand($rcon, new ServerChat(sprintf('SHUTDOWN')));
         sleep(5);
-        // $this->runCommand($rcon, new DoExit());
+        $this->runCommand($rcon, new DoExit());
     }
 }
