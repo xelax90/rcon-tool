@@ -31,7 +31,7 @@ class StopServer extends AbstractScript
         $stopImmediately = $this->stopImmediately;
         if (! $stopImmediately) {
             // Faster shutdown if no players are connected
-            $playerList = $this->runCommand($rcon, new ListpLayers());
+            $playerList = trim($this->runCommand($rcon, new ListpLayers()));
             if ($playerList === 'No Players Connected') {
                 $stopImmediately = true;
             }

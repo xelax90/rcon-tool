@@ -34,7 +34,7 @@ class RconService
                 $serverInfo['password'],
                 $this->config->getConfig()['rcon']['timeout'] ?? 3
             );
-            if (! $rcon->connect()) {
+            if (! @$rcon->connect()) {
                 throw new RuntimeException(sprintf('Failed to connect to server %s', $server));
             }
             $this->connections[$server] = $rcon;

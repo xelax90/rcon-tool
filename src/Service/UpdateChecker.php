@@ -2,12 +2,14 @@
 namespace RconManager\Service;
 
 use mikehaertl\shellcommand\Command;
+use Mustache_Engine;
 use RuntimeException;
 
 class UpdateChecker
 {
     protected $appIds = [
         RconService::SERVER_TYPE_VRISING => 1829350,
+        RconService::SERVER_TYPE_ARK => 2430930,
     ];
 
     public function __construct(
@@ -18,15 +20,22 @@ class UpdateChecker
     public function serverNeedsUpdate(string $server)
     {
         $serverInfo = $this->config->getServerConfig($server);
+        $managementConfig = $this->config->getConfig()['management'] ?? [];
         if (! isset($serverInfo['type'])) {
             throw new RuntimeException(sprintf('No server type specified for server %s', $server));
         }
-        if (! isset($serverInfo['management'])) {
+        if (! isset($serverInfo['management']) && empty($managementConfig)) {
             throw new RuntimeException(sprintf('No management configuration in server %s', $server));
         }
 
+        $mustache = new Mustache_Engine();
+
         $installDir = $serverInfo['management']['localInstallDir'] ?? null;
         $appId = $serverInfo['management']['steamAppId'] ?? $this->appIds[$serverInfo['type']] ?? null;
+        if (! $installDir) {
+            $installDirTemplate = $managementConfig[$serverInfo['type']]['localInstallDirTemplate'] ?? '';
+            $installDir = $mustache->render($installDirTemplate, ['server' => $server]);
+        }
         if (! $installDir) {
             throw new RuntimeException(sprintf('Invalid Install Dir in server %s', $server));
         }

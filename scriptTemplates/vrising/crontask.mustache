@@ -4,14 +4,27 @@ if EXIST %~dp0\crontask.lock (
 )
 
 copy /y NUL %~dp0\crontask.lock >NUL
-php {{applicationPath}}\application.php rcon:check-update {{server}}
+
+php {{applicationPath}}\application.php rcon:check-is-running {{server}}
 
 if %errorlevel%==1 (
-    echo "Stopping Server"
-    php {{applicationPath}}\application.php rcon:vrising:stop-server {{server}}
-    START "VRISING" {{applicationPath}}\generated\{{server}}\startServer.bat
+    goto :startServer
 ) else (
-    echo "OK"
+    php {{applicationPath}}\application.php rcon:check-update {{server}}
+
+    if %errorlevel%==1 (
+        echo "Stopping Server"
+        php {{applicationPath}}\application.php rcon:vrising:stop-server {{server}}
+        goto :startServer
+    ) else (
+        echo "OK"
+    )
 )
 
+goto :cleanup
+
+:startServer
+START "VRISING" {{applicationPath}}\generated\{{server}}\startServer.bat
+
+:cleanup
 del %~dp0\crontask.lock
