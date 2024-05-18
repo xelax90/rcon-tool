@@ -9,16 +9,16 @@ php {{applicationPath}}\application.php rcon:check-is-running {{server}}
 
 if %errorlevel%==1 (
     goto :startServer
-) else (
-    php {{applicationPath}}\application.php rcon:check-update {{server}}
+)
 
-    if %errorlevel%==1 (
-        echo "Stopping Server"
-        php {{applicationPath}}\application.php rcon:vrising:stop-server {{server}}
-        goto :startServer
-    ) else (
-        echo "OK"
-    )
+php {{applicationPath}}\application.php rcon:check-update {{server}}
+
+if %errorlevel%==1 (
+    echo "Stopping Server"
+    php {{applicationPath}}\application.php rcon:vrising:stop-server {{server}}
+    goto :startServer
+) else (
+    echo "OK"
 )
 
 goto :cleanup
