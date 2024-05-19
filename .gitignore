@@ -1,5 +1,4 @@
 vendor/
-config/config.php
-config/nyn.config.php
+config/*.php
 generated/*
 !generated/.gitkeep

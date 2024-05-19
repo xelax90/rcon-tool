@@ -27,6 +27,7 @@ $application->setCommandLoader(new ContainerCommandLoader($container, [
     'rcon:check-is-running' => Command\CheckServerRunning::class,
     'rcon:ark:list-players' => Command\Ark\ListPlayersCommand::class,
     'rcon:ark:stop-server' => Command\Ark\StopServerCommand::class,
+    'rcon:vrising:cancel-shutdown' => Command\VRising\CancelShutdownCommand::class,
     'rcon:ark:saveworld' => Command\Ark\SaveWorldCommand::class,
     'rcon:vrising:stop-server' => Command\VRising\StopServerCommand::class,
     'rcon:vrising:list-players' => Command\VRising\ListPlayersCommand::class,

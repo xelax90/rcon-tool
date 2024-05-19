@@ -2,6 +2,8 @@
 namespace RconManager\Service;
 
 use InvalidArgumentException;
+use Laminas\ConfigAggregator\ConfigAggregator;
+use Laminas\ConfigAggregator\PhpFileProvider;
 
 class Config
 {
@@ -13,7 +15,10 @@ class Config
 
     public function getConfig() {
         if ($this->config === null) {
-            $this->config = require __DIR__ . '/../../config/config.php';
+            $aggregator = new ConfigAggregator([
+                new PhpFileProvider(__DIR__ . '/../../config/*.php'),
+            ]);
+            $this->config = $aggregator->getMergedConfig();
         }
         return $this->config;
     }

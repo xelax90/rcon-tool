@@ -1,41 +1,13 @@
 <?php
 return [
-    'rcon_servers' => [
-        // Configure servers here
-        // 'SERVERNAME' => [
-        //     'host' => '', // Host IP
-        //     'port' => 0, // RCON Port
-        //     'password' => '', // RCON Password
-        // ],
-        // 'SERVERNAME' => [
-        //     'host' => 'localhost', // Host IP
-        //     'port' => 27218, // RCON Port
-        //     'password' => '', // RCON Password
-        //     // Add Management configuration for managed local servers
-        //     'management' => [
-        //         'localInstallDir' => '', // steamcmd force_install_dir parameter. Optional if localInstallDirTemplate is provided
-        //         'steamAppId' => , // steamcmd APP ID. Optional
-        //         // Server-Type Specific configuration
-        //         'vrising' => [
-        //             'saveDataDir' => '', // V Rising persistent data path. Optional if saveDataDirTemplate is provided
-        //         ]
-        //     ],
-        // ],
-    ],
     'rcon' => [
         'timeout' => 3,
     ],
     // For managing local servers you must provide the path to steamcmd.exe
-    // 'steamcmd' => [
-    //     'path' => 'C:\Servers\steamcmd\steamcmd.exe',
-    // ],
-    // Default directory templates
-    // 'management' => [
-    //     'vrising' => [
-    //         'localInstallDirTemplate' => 'C:\Servers\VRising-{{server}}',
-    //         'saveDataDirTemplate' => 'C:\Servers\SaveData\VRising-{{server}}',
-    //     ],
-    // ],
+    'steamcmd' => [
+        // 'path' => 'C:\Servers\steamcmd\steamcmd.exe',
+    ],
+    // RCON Script settings
     'scripts' => [
         'shutdown' => [
             'intervals' => [
@@ -48,11 +20,6 @@ return [
                 30,
                 20,
                 10,
-                5,
-                4,
-                3,
-                2,
-                1,
             ],
         ],
         'saveworld' => [

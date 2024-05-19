@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'rcon_servers' => [
+        'vrising' => [
+            'type' => 'vrising',
+            // RCON Host
+            'host' => 'localhost',
+            // RCON Port
+            'port' => 27118,
+            // Steam Query Port (Required for player listing)
+            'steamQeryPort' => 27116,
+            // RCON Password
+            'password' => 'pw123456789',
+        ],
+    ],
+    'management' => [
+        'vrising' => [
+            // Mustache template for server install path
+            'localInstallDirTemplate' => 'C:\Servers\VRising-{{server}}',
+            // Mustache template for savegames
+            'saveDataDirTemplate' => 'C:\Servers\SaveData\VRising-{{server}}',
+        ],
+    ],
+];

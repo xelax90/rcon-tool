@@ -7,7 +7,8 @@
         "xelax90/steam-condenser": "dev-master",
         "mustache/mustache": "^2.14",
         "symfony/filesystem": "^7.0",
-        "mikehaertl/php-shellcommand": "^1.7"
+        "mikehaertl/php-shellcommand": "^1.7",
+        "laminas/laminas-config-aggregator": "^1.15"
     },
     "repositories": [
         {

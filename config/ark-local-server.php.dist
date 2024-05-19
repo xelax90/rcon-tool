@@ -1,0 +1,176 @@
+<?php
+use RconManager\Utils\ArkConfig;
+
+return [
+    'rcon_servers' => [
+        // The server is referenced by this key in all commands
+        'island' => [
+            'type' => 'ark',
+            // RCON Host
+            'host' => 'localhost',
+            // RCON Port
+            'port' => 11170,
+            // RCON Password
+            'password' => 'pw123456789',
+            'management' => [
+                // Local Server Management settings
+                'ark' => [
+                    // Use configuration templates to save presets
+                    // Using templates optional but is highly recommended when hosting a cluster
+                    'configTemplate' => 'myConfigPreset',
+                    // Ark Map
+                    'map' => 'TheIsland_WP',
+                    // Adjust settings from config preset for this server
+                    'gameSettings' => [
+                        // Command line options.
+                        // See https://ark.wiki.gg/wiki/Server_configuration#Command_line_options for a full list of options
+                        ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION => [
+                            // Game Port
+                            '?Port' => 7777,
+                            // Steam Query Port
+                            '?QueryPort' => 27015,
+                            // Server name
+                            '?SessionName' => 'My Island Server',
+                        ],
+                        // Adjust GameUserSettings.ini
+                        ArkConfig::CONFIG_TYPE_GAMEUSERSETTINGS => [
+                            // Key is ini section name
+                            'ServerSettings' => [
+                                // RCON Port (must be same as above)
+                                'RCONPort' => 11170,
+                            ],
+                            'SessionSettings' => [
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        // The server is referenced by this key in all commands
+        'scorched' => [
+            'type' => 'ark',
+            // RCON Host
+            'host' => 'localhost',
+            // RCON Port
+            'port' => 11110,
+            // RCON Password
+            'password' => 'pw123456789',
+            'management' => [
+                'ark' => [
+                    // Use configuration templates to save presets
+                    // Using templates optional but is highly recommended when hosting a cluster
+                    'configTemplate' => 'myConfigPreset',
+                    // Ark Map
+                    'map' => 'ScorchedEarth_WP',
+                    // Adjust settings from config preset for this server
+                    'gameSettings' => [
+                        // Command line options.
+                        // See https://ark.wiki.gg/wiki/Server_configuration#Command_line_options for a full list of options
+                        ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION => [
+                            // Game Port
+                            '?Port' => 7779,
+                            // Steam Query Port
+                            '?QueryPort' => 27017,
+                            // Server Name
+                            '?SessionName' => 'My Scorched Earth Server',
+                        ],
+                        // Adjust GameUserSettings.ini
+                        ArkConfig::CONFIG_TYPE_GAMEUSERSETTINGS => [
+                            'ServerSettings' => [
+                                // RCON Port (must be same as above)
+                                'RCONPort' => 11110,
+                            ],
+                            'SessionSettings' => [
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'management' => [
+        'ark' => [
+            // Mustache template for server install path
+            'localInstallDirTemplate' => 'C:\Servers\Ark-{{server}}',
+            'configTemplates' => [
+                // Set up a configuraiton template. Using templates is highly recommended when hosting a cluster
+                'myConfigPreset' => [
+                    // Command line options.
+                    // See https://ark.wiki.gg/wiki/Server_configuration#Command_line_options for a full list of options
+                    ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION => [
+                        '-MaxPlayers' => 20,
+                        '-WinLiveMaxPlayers' => 20,
+                        // Cluster settings
+                        '-clusterID' => 'MyArkCluster',
+                        '-ClusterDirOverride' => 'C:\Servers\SaveData\ArkClusters',
+                        '-ServerPlatform' => 'All',
+                        // Dino wipe on startup
+                        '-ForceRespawnDinos' => null,
+                        // Configure exclusive join by entering player EOS ids
+                        '-exclusivejoin' => [
+                            'EOSID1',
+                            'EOSID2',
+                        ],
+                        '-UseBattlEye' => null,
+                        // Configure mods
+                        '-Mods' => [
+                            939228, // QoL+
+                            983782, // Dear Jane
+                        ],
+                    ],
+                    // Adjust Game.ini
+                    ArkConfig::CONFIG_TYPE_GAME => [
+                        // Key is name of the section.
+                        '/script/shootergame.shootergamemode' => [
+                            // Use Key=>Value to enter simple values that can be overwritten by specific server configuration
+                            'BabyCuddleIntervalMultiplier' => 0.2,
+                            'BabyImprintAmountMultiplier' => 2,
+                            'BabyMatureSpeedMultiplier' => 8,
+                            'bAllowFlyerSpeedLeveling' => true,
+                            'bAllowSpeedLeveling' => true,
+                            'bAllowUnlimitedRespecs' => true,
+                            'bDisableStructurePlacementCollision' => true,
+                            'bPvEAllowTribeWarCancel' => true,
+                            'EggHatchSpeedMultiplier' => 25,
+                            'GlobalSpoilingTimeMultiplier' => 2,
+                            'MatingIntervalMultiplier' => 0.15,
+                            'MatingSpeedMultiplier' => 2,
+                            'MaxDifficulty' => true,
+                            // Do not use a key to enter lines that can repeat keys (For example) OverrideNamedEngramEntries, OverridePlayerLevelEngramPoints, etc.
+                            // These settings cannot be overwritten by specific server configuration
+                            'OverrideNamedEngramEntries=(EngramClassName="EngramEntry_Propagator_C",EngramHidden=true)',
+                        ],
+                    ],
+                    // Adjust GameUserSettings.ini
+                    ArkConfig::CONFIG_TYPE_GAMEUSERSETTINGS => [
+                        'ServerSettings' => [
+                            'OverrideOfficialDifficulty' => 5,
+                            'DinoCountMultiplier' => 1.2,
+                            'HarvestAmountMultiplier' => 2,
+                            'TamingSpeedMultiplier' => 3,
+                            'ItemStackSizeMultiplier' => 2,
+                            // RCON Settings
+                            'RCONEnabled' => true,
+                            'RCONServerGameLogBuffer' => 50,
+                            // RCON and admin Password
+                            'ServerAdminPassword' => 'pw123456789',
+                            // Server password
+                            'ServerPassword' => 'pw123456789',
+                            'ServerPVE' => true,
+                            'ShowFloatingDamageText' => true,
+                        ],
+                        'SessionSettings' => [
+                        ],
+                        'MessageOfTheDay' => [
+                            'Message' => 'Welcome to my Server!',
+                            'Duration' => 30,
+                        ],
+                        // Qol+ mod settings
+                        'QoLPlus' => [
+                        ]
+                    ],
+                ],
+            ],
+        ],
+    ],
+];
