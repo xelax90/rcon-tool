@@ -6,19 +6,19 @@ namespace RconManager\ServerCommand\VRising;
  * Server will be shutdown aver $minutes minutes.
  * The message $message is sent to all users immediately
  */
-class Shutdown extends AbstractCommand
+class CancelShutdown extends AbstractCommand
 {
-    public function __construct(protected int $minutes, protected string $message)
+    public function __construct(protected string $message)
     {
     }
 
     public function validateResponse(string $response): bool
     {
-        return trim($response) == 'shutdown initiated';
+        return true;
     }
 
     public function getRconCommand(...$arguments): string
     {
-        return sprintf('shutdown %d "%s"', $this->minutes, $this->message);
+        return sprintf('cancelshutdown "%s"', $this->message);
     }
 }

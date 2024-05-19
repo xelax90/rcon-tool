@@ -33,7 +33,7 @@ class StopServer extends AbstractScript
             rsort($messageIntervals, SORT_NUMERIC);
         }
         if (empty($messageIntervals)) {
-            $messageIntervals = [60, 10, 5, 4, 3, 2, 1];
+            $messageIntervals = [60, 30, 10];
         }
         if ($messageIntervals[0] < 60) {
             array_unshift($messageIntervals, 60);

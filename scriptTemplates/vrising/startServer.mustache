@@ -15,7 +15,8 @@ set "TIMESTAMP=%YYYY%%MM%%DD%_%HH%%MIN%%SEC%"
 
 echo "Starting V Rising Dedicated Server - PRESS CTRL-C to exit"
 
-@echo on
 C:\Servers\Nyntology-VRising\VRisingServer.exe ^
  -persistentDataPath {{saveDataDir}}\save-data ^
  -logFile "{{saveDataDir}}\logs\VRisingServer-%TIMESTAMP%.log" 1>nul
+
+exit

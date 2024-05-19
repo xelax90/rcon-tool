@@ -2,6 +2,7 @@
 namespace RconManager\Command\VRising;
 
 use RconManager\Command\AbstractServerCommand;
+use RconManager\ServerCommand\VRising\CancelShutdown;
 use RconManager\ServerScripts\VRising\StopServer;
 use RconManager\Service\RconService;
 use RuntimeException;
@@ -13,11 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 // the name of the command is what users type after "php bin/console"
-#[AsCommand(name: 'rcon:vrising:stop-server')]
-class StopServerCommand extends AbstractServerCommand
+#[AsCommand(name: 'rcon:vrising:cancel-shutdown')]
+class CancelShutdownCommand extends AbstractServerCommand
 {
     public function __construct(
-        protected StopServer $script,
         RconService $rconService
     ) {
         parent::__construct($rconService);
@@ -27,9 +27,9 @@ class StopServerCommand extends AbstractServerCommand
     {
         $this
             // the command description shown when running "php bin/console list"
-            ->setDescription('Shutdown server')
+            ->setDescription('Cancel Server Shutdown')
             // the command help shown when running the command with the "--help" option
-            ->setHelp('Server will save world and shutdown after sending configured messages.')
+            ->setHelp('Stop shutdown scheduled by stop-server command.')
         ;
         parent::configure();
     }
@@ -41,17 +41,7 @@ class StopServerCommand extends AbstractServerCommand
         $this->requestMissingInputOptions($input, $io);
         $server = $input->getArgument('server');
 
-        try {
-            $steamServer = $this->rconService->connectSteam($server);
-            $players = $steamServer->getPlayers();
-            if (count($players) <= 0) {
-                // Stop immediately if no players are connected
-                $this->script->setStopImmediately(true);
-            }
-        } catch (RuntimeException $e) {
-        }
-
-        $this->rconService->runScript($server, $this->script);
+        $this->rconService->runCommand($server, new CancelShutdown('Shutdown is canceled'));
         
         return Command::SUCCESS;
     }
