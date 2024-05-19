@@ -1,0 +1,38 @@
+<?php
+// Use this template to run RCON Commands and scripts on remote servers
+return [
+    'rcon_servers' => [
+        // SERVERNAME: The server is referenced by this key in all commands
+        'island' => [
+            'type' => 'ark',
+            // RCON Host
+            'host' => '123.123.123',
+            // RCON Port
+            'port' => 11170,
+            // RCON Password
+            'password' => 'pw123456789',
+        ],
+        // SERVERNAME: The server is referenced by this key in all commands
+        'scorched' => [
+            'type' => 'ark',
+            // RCON Host
+            'host' => '123.123.123',
+            // RCON Port
+            'port' => 11110,
+            // RCON Password
+            'password' => 'pw123456789',
+        ],
+        // SERVERNAME: The server is referenced by this key in all commands
+        'awesomeSuckage' => [
+            'type' => 'vrising',
+            // RCON Host
+            'host' => 'localhost',
+            // RCON Port
+            'port' => 27118,
+            // Steam Query Port (Required for player listing)
+            'steamQeryPort' => 27116,
+            // RCON Password
+            'password' => 'pw123456789',
+        ],
+    ],
+];

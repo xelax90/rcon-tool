@@ -1,8 +1,9 @@
 <?php
+// Use this template to run and manage local vrising server
 
 return [
     'rcon_servers' => [
-        'vrising' => [
+        'awesomeSuckage' => [
             'type' => 'vrising',
             // RCON Host
             'host' => 'localhost',
@@ -11,7 +12,7 @@ return [
             // Steam Query Port (Required for player listing)
             'steamQeryPort' => 27116,
             // RCON Password
-            'password' => 'pw123456789',
+            'password' => 'RCON_PASSWORD',
         ],
     ],
     'management' => [

@@ -18,18 +18,27 @@ This tool helps managing game servers utilizing RCON and the Steam Query API. Cu
   ```
 
 ## Configuration
-- Copy the file `config/config.php.dist` to `config/config.php`
-- Use the provided template to add your servers to the `rcon_servers` configuration entry
+- All files with the `.php` extension in the `config` directory are used by this tool.
+- Copy the file `config/config.php.dist` to `config/config.php` for base configuration
+- Use the provided configuraiton examples as base for the configuration
+- The following templates are provided:
+  - remote-server.php.dist
+    - Use this template to only run RCON Commands and scripts on remote servers
+  - ark-local-server.php.dist
+    - Use this template to run and manage local ark servers
+    - The example in this template shows a working cluster setup
+  - vrising-local-server.php.dist
+    - Use this template to run and manage local vrising server
+
 
 ## Usage
 - Run `php application.php` to get a list of available commands
-- You can pass the `SERVERNAME` from your configuration as argument to all server-specific commands to avoid being prompted for it. (Example: `php applicaiton.php rcon:vrising:list-players my-vrising-server`)
+- You can pass the server name from your configuration as argument to all server-specific commands to avoid being prompted for it. (Example: `php applicaiton.php rcon:ark:list-players island`)
 
 ## Local Server management
 - This tool provies a generator for scripts that help managing local game servers.
 - For generating the scripts run `php application.php rcon:generate-scripts <server>` where `<server>` is the SERVERNAME used in the configuration.
 - This will generate scripts in the `generated` directory.
-- Currently only VRising has generators. Ark generators are in development.
 
 ### V Rising
 #### Generating Scripts
@@ -41,29 +50,7 @@ This tool helps managing game servers utilizing RCON and the Steam Query API. Cu
 Disclaimer: This is not a full guide to configuring your V Rising Server. These instructions set up the server ready to be configured to your needs. For Setting Up and configuring the V Rising Server always refer to the official documentation at https://github.com/StunlockStudios/vrising-dedicated-server-instructions or the official V Rising Discord.
 
 For servers running with this tool I recommend following these steps:
-- Configure your server in the config.php file. A V-Rising server config could look something like this (The port numbers can be chosen freely):
-    ```php
-    'rcon_servers' => [
-        'awesomeSuckage' => [
-            'type' => 'vrising',
-            'host' => 'localhost',
-            'port' => 27218,
-            'steamQeryPort' => 27216,
-            'password' => 'RCON_PASSWORD',
-        ],
-    ],
-    'steamcmd' => [
-        'path' => 'C:\Servers\steamcmd\steamcmd.exe',
-    ],
-    // Default directory templates
-    'management' => [
-        'vrising' => [
-            // Do not remove or replace the {{server}} part. These are mustache templates. 
-            'localInstallDirTemplate' => 'C:\Servers\VRising-{{server}}',
-            'saveDataDirTemplate' => 'C:\Servers\SaveData\VRising-{{server}}',
-        ],
-    ],
-    ```
+- Copy the provided `config/vrising-local-server.php.dist` to `config/vrising-local-server.php` and adjust it to your needs. The port numbers can be chosen freely as long as they are not occupied by a program on your server
 - Generate the bat scripts using `php application.php rcon:generate-scripts awesomeSuckage`
 - Generate initial json configuration by running `php application.php rcon:vrising:init-local-server awesomeSuckage`
     - This command will generate the `ServerHostSettings.json` and an empty `ServerGameSettings.json` in the configured saveDataDir (In this case `C:\Servers\SaveData\VRising-awesomeSuckage`)
@@ -85,4 +72,35 @@ For servers running with this tool I recommend following these steps:
 - The server should now be up and running and will check for updates every 15 minutes.
 - If the script detects a required update, the server will be shut down using the `rcon:vrising:stop-server` command and then started again.
 - All online players will be notified about the restart according to shutdown intervals configuration and the world will be saved before the restart happens
-    
+
+### Ark: Survival Ascended
+#### Generating Scripts
+- For Ark the following scripts are generated:
+  - `startServer.bat`: Install, update and runs the server.
+  - `crontask.bat`: script should be set up as cronjob. It checks if the server needs an update. If it detects a new update, the server will be stopped (notifying online players before it shuts down) and started again using `startServer.bat`.
+  - `Game.ini`: This is the Game.ini configuration file. It will be copied to the server on every server start
+  - `GameUserSettings.ini`: This is the GameUserSettings.ini configuration file. It will be copied to the server on every server start
+
+#### Setting up Ark Server
+Disclaimer: This is not a full guide to configuring your Ark Server. These instructions set up the server ready to be configured to your needs. For Setting Up and configuring the Ark Server always refer to the official wiki at https://ark.wiki.gg/wiki/Server_configuration or the official Ark Discord.
+
+For servers running with this tool I recommend following these steps:
+- Copy the provided `config/ark-local-server.php.dist` to `config/ark-local-server.php` and adjust it to your needs. The example provides a configuration example for a cluster with one Island and one Scorched Earth Server.
+- Generate the scripts and server configuration using `php application.php rcon:generate-scripts island` and `php application.php rcon:generate-scripts scorched`
+- Run the generated scripts `generated\island\startServer.bat` and  `generated\scorched\startServer.bat` files by double-clicking them.
+- Wait until the servers are installed and started
+- You should be able to connect to your servers now. To find the server you might have to check the "Show player Servers" and/or the "Show Password Protected Servers" checkbox in the Ark Server browser.
+- Setting up automated updates with scheduled tasks:
+    - Open the Windows Scheduled Tasks.
+    - Create two new new simple tasks with the following settings:
+        - Name: Ark Server Update island (and Ark Server Update scorched)
+        - Daily at 00:00:00, Repeat every day
+        - Action: Start program. Select the generated crontask.bat file
+        - After the creation is finished, doubleclick the created task
+        - Select Trigger
+        - Doubleclick on the daily trigger
+        - Check the Repeat checkbox and select 15 minutes
+        - Click OK and save the task
+- The server should now be up and running and will check for updates every 15 minutes.
+- If the script detects a required update, the server will be shut down using the `rcon:ark:stop-server` command and then started again.
+- All online players will be notified about the restart according to shutdown intervals configuration and the world will be saved before the restart happens

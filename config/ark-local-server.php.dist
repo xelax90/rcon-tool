@@ -1,4 +1,6 @@
 <?php
+// Use this template to run and manage local ark servers
+// The example in this template shows a working cluster setup
 use RconManager\Utils\ArkConfig;
 
 return [
