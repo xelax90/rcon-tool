@@ -61,10 +61,19 @@ class VRising implements ScriptGenerator
             throw new RuntimeException('Steam CMD Path not configured');
         }
 
+        $startWaitTimeout = 60;
+        if (isset($managementConfig['ark']['startWaitTimeout'])) {
+            $startWaitTimeout = $managementConfig['ark']['startWaitTimeout'];
+        }
+        if (isset($serverInfo['management']['ark']['startWaitTimeout'])) {
+            $startWaitTimeout = $serverInfo['management']['ark']['startWaitTimeout'];
+        }
+
         return [
             'installDir' => $installDir,
             'saveDataDir' => $saveDataDir,
             'steamcmdPath' => $steamCmdPath,
+            'startWaitTimeout' => $startWaitTimeout,
         ];
     }
 
@@ -93,9 +102,16 @@ class VRising implements ScriptGenerator
 
     protected function generateCrontaskScript(string $server)
     {
+        $serverInfo = $this->config->getServerConfig($server);
+        $validatedConfig = $this->getValidatedServerConfig($server);
+
+        $serverPort = ($serverInfo['port'] ?? 27218) - 3;
+
         $params = [
             'server' => $server,
             'applicationPath' => str_replace('/', DIRECTORY_SEPARATOR, Path::canonicalize(getcwd())),
+            'serverPort' => $serverPort,
+            'maxStartCounter' => ceil($validatedConfig['startWaitTimeout'] / 5),
         ];
         $templateContents = file_get_contents('scriptTemplates/vrising/crontask.mustache');
 

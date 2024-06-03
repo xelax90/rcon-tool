@@ -26,5 +26,22 @@ goto :cleanup
 :startServer
 START "VRISING" {{applicationPath}}\generated\{{server}}\startServer.bat
 
+set /a counter=1
+
+:startwait
+if %counter% gtr {{maxStartCounter}} (
+    goto :cleanup
+)
+
+netstat -na | find "{{serverPort}}"
+if %errorlevel%==0 (
+    goto :cleanup
+) else (
+    timeout 5
+    set /a counter=%counter%+1
+    goto :startwait
+)
+
+
 :cleanup
 del %~dp0\crontask.lock

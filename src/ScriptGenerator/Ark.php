@@ -44,6 +44,14 @@ class Ark implements ScriptGenerator
             $configTemplate = $this->config->getConfig()['management']['ark']['configTemplates'][$serverInfo['management']['ark']['configTemplate']] ?? [];
         }
 
+        $startWaitTimeout = 120;
+        if (isset($managementConfig['ark']['startWaitTimeout'])) {
+            $startWaitTimeout = $managementConfig['ark']['startWaitTimeout'];
+        }
+        if (isset($serverInfo['management']['ark']['startWaitTimeout'])) {
+            $startWaitTimeout = $serverInfo['management']['ark']['startWaitTimeout'];
+        }
+
         foreach ($serverInfo['management']['ark']['gameSettings'] ?? [] as $settingType => $typeSettings) {
             if ($settingType == ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION) {
                 // No sections in command line
@@ -89,6 +97,7 @@ class Ark implements ScriptGenerator
         return [
             'installDir' => $installDir,
             'steamcmdPath' => $steamCmdPath,
+            'startWaitTimeout' => $startWaitTimeout,
             'serverMap' => $serverMap,
             'gameSettings' => $configTemplate,
         ];
@@ -120,10 +129,19 @@ class Ark implements ScriptGenerator
             $serverStartParameters[] = sprintf('%s="%s"', $key, $value);
         }
 
+        $serverPort = 7777;
+        if (isset($validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION]['?Port'])) {
+            $serverPort = $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION]['?Port'];
+        } elseif (isset($validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_GAMEUSERSETTINGS]['SessionSettings']['Port'])) {
+            $serverPort = $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_GAMEUSERSETTINGS]['SessionSettings']['Port'];
+        }
+
         $params = [
             'steamcmdPath' => $validatedConfig['steamcmdPath'],
             'installDir' => $validatedConfig['installDir'],
             'serverMap' => $validatedConfig['serverMap'],
+            'serverPort' => $serverPort,
+            'maxStartCounter' => ceil($validatedConfig['startWaitTimeout'] / 5),
             'questionmarkParameters' => implode('', $questionmarkParameters),
             'serverStartParameters' => implode(' ', $serverStartParameters),
         ];
