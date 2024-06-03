@@ -3,6 +3,13 @@ if EXIST %~dp0\startServer.lock (
     exit
 )
 
+netstat -na | find "{{serverPort}}"
+if %errorlevel%==0 (
+    exit
+)
+
+copy /y NUL %~dp0\startServer.lock >NUL
+
 SET STEAMCMD={{{steamcmdPath}}}
 SET APP_INSTALL_DIR={{{installDir}}}
 

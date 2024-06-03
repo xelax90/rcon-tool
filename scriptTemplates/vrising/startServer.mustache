@@ -1,4 +1,10 @@
 @echo off
+
+netstat -na | find "{{serverPort}}"
+if %errorlevel%==0 (
+    exit
+)
+
 SET STEAMCMD={{steamcmdPath}}
 SET APP_INSTALL_DIR={{installDir}}
 

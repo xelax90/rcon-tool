@@ -62,11 +62,16 @@ class VRising implements ScriptGenerator
         }
 
         $startWaitTimeout = 60;
-        if (isset($managementConfig['ark']['startWaitTimeout'])) {
-            $startWaitTimeout = $managementConfig['ark']['startWaitTimeout'];
+        if (isset($managementConfig['vrising']['startWaitTimeout'])) {
+            $startWaitTimeout = $managementConfig['vrising']['startWaitTimeout'];
         }
-        if (isset($serverInfo['management']['ark']['startWaitTimeout'])) {
-            $startWaitTimeout = $serverInfo['management']['ark']['startWaitTimeout'];
+        if (isset($serverInfo['management']['vrising']['startWaitTimeout'])) {
+            $startWaitTimeout = $serverInfo['management']['vrising']['startWaitTimeout'];
+        }
+
+        $serverPort = ($serverInfo['port'] ?? 27218) - 3;
+        if (isset($serverInfo['management']['vrising']['serverPort'])) {
+            $serverPort = $serverPort['management']['vrising']['serverPort'];
         }
 
         return [
@@ -74,6 +79,7 @@ class VRising implements ScriptGenerator
             'saveDataDir' => $saveDataDir,
             'steamcmdPath' => $steamCmdPath,
             'startWaitTimeout' => $startWaitTimeout,
+            'serverPort' => $serverPort,
         ];
     }
 
@@ -85,6 +91,7 @@ class VRising implements ScriptGenerator
             'steamcmdPath' => $validatedConfig['steamcmdPath'],
             'installDir' => $validatedConfig['installDir'],
             'saveDataDir' => $validatedConfig['saveDataDir'],
+            'serverPort' => $validatedConfig['serverPort'],
         ];
         $templateContents = file_get_contents('scriptTemplates/vrising/startServer.mustache');
 
@@ -102,15 +109,12 @@ class VRising implements ScriptGenerator
 
     protected function generateCrontaskScript(string $server)
     {
-        $serverInfo = $this->config->getServerConfig($server);
         $validatedConfig = $this->getValidatedServerConfig($server);
-
-        $serverPort = ($serverInfo['port'] ?? 27218) - 3;
 
         $params = [
             'server' => $server,
             'applicationPath' => str_replace('/', DIRECTORY_SEPARATOR, Path::canonicalize(getcwd())),
-            'serverPort' => $serverPort,
+            'serverPort' => $validatedConfig['serverPort'],
             'maxStartCounter' => ceil($validatedConfig['startWaitTimeout'] / 5),
         ];
         $templateContents = file_get_contents('scriptTemplates/vrising/crontask.mustache');
