@@ -130,10 +130,8 @@ class Ark implements ScriptGenerator
         }
 
         $serverPort = 7777;
-        if (isset($validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION]['?Port'])) {
-            $serverPort = $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION]['?Port'];
-        } elseif (isset($validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_GAMEUSERSETTINGS]['SessionSettings']['Port'])) {
-            $serverPort = $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_GAMEUSERSETTINGS]['SessionSettings']['Port'];
+        if (isset($validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION]['-port'])) {
+            $serverPort = $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION]['-port'];
         }
 
         $params = [

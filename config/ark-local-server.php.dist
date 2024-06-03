@@ -28,7 +28,7 @@ return [
                         // See https://ark.wiki.gg/wiki/Server_configuration#Command_line_options for a full list of options
                         ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION => [
                             // Game Port
-                            '?Port' => 7777,
+                            '-port' => 7777,
                             // Steam Query Port
                             '?QueryPort' => 27015,
                             // Server name
@@ -70,7 +70,7 @@ return [
                         // See https://ark.wiki.gg/wiki/Server_configuration#Command_line_options for a full list of options
                         ArkConfig::CONFIG_TYPE_COMMANDLINE_OPTION => [
                             // Game Port
-                            '?Port' => 7779,
+                            '-port' => 7779,
                             // Steam Query Port
                             '?QueryPort' => 27017,
                             // Server Name
