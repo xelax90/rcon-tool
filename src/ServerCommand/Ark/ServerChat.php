@@ -13,6 +13,10 @@ class ServerChat extends AbstractCommand
 
     public function validateResponse(string $response): bool
     {
+        if (trim($response) === '') {
+            // For some reason ASA sometimes returns an empty response and sometimes not.
+            return true;
+        }
         return trim($response) === 'Server received, But no response!!';
     }
 
