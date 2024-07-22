@@ -1,6 +1,6 @@
 @echo off
 
-netstat -na | find "{{serverPort}}"
+netstat -na | find ":{{serverPort}} "
 if %errorlevel%==0 (
     exit
 )
