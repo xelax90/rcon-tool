@@ -3,7 +3,7 @@ if EXIST %~dp0\startServer.lock (
     exit
 )
 
-netstat -na | find "{{serverPort}}"
+netstat -na | find ":{{serverPort}} "
 if %errorlevel%==0 (
     exit
 )
