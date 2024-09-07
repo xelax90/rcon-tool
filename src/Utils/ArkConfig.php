@@ -13,6 +13,10 @@ class ArkConfig
     const CONFIG_TYPE_COMMANDLINE_OPTION = 'commandLine';
     const CONFIG_TYPE_GAMEUSERSETTINGS = 'gameUserSettings';
     const CONFIG_TYPE_GAME = 'game';
+    const CONFIG_TYPE_PLAYER_EXCLUSIVE_JOIN_LIST = 'PlayersExclusiveJoinList';
+    const CONFIG_TYPE_PLAYER_JOIN_NO_CHECK_LIST = 'PlayersJoinNoCheckList';
+    const CONFIG_TYPE_ALLOWED_CHEATER_ACCOUNT_IDS = 'AllowedCheaterAccountIDs';
+    const CONFIG_TYPE_BANLIST = 'Banlist';
 
     public static function getConfig()
     {

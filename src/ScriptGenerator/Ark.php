@@ -60,6 +60,16 @@ class Ark implements ScriptGenerator
                 }
                 continue;
             }
+            if (in_array($settingType, [
+                ArkConfig::CONFIG_TYPE_PLAYER_EXCLUSIVE_JOIN_LIST,
+                ArkConfig::CONFIG_TYPE_PLAYER_JOIN_NO_CHECK_LIST,
+                ArkConfig::CONFIG_TYPE_ALLOWED_CHEATER_ACCOUNT_IDS,
+                ArkConfig::CONFIG_TYPE_BANLIST
+            ])) {
+                // Player ID lists have no keys
+                $configTemplate[$settingType] = array_unique(array_merge($configTemplate[$settingType], $typeSettings));
+                continue;
+            }
             foreach ($typeSettings as $section => $sectionSettings) {
                 foreach ($sectionSettings as $setting => $settingValue) {
                     if (is_numeric($setting)) {
@@ -211,6 +221,10 @@ class Ark implements ScriptGenerator
         }
         file_put_contents(Path::join($outputDir, 'Game.ini'), $gameIniContents);
         file_put_contents(Path::join($outputDir, 'GameUserSettings.ini'), $gameUserIniContent);
+        file_put_contents(Path::join($outputDir, 'PlayersExclusiveJoinList.txt'), implode("\n", $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_PLAYER_EXCLUSIVE_JOIN_LIST] ?? []));
+        file_put_contents(Path::join($outputDir, 'PlayersJoinNoCheckList.txt'), implode("\n", $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_PLAYER_JOIN_NO_CHECK_LIST] ?? []));
+        file_put_contents(Path::join($outputDir, 'AllowedCheaterAccountIDs.txt'), implode("\n", $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_ALLOWED_CHEATER_ACCOUNT_IDS] ?? []));
+        file_put_contents(Path::join($outputDir, 'Banlist.txt'), implode("\n", $validatedConfig['gameSettings'][ArkConfig::CONFIG_TYPE_BANLIST] ?? []));
     }
 
     protected function buildIniContent(array $configArray)

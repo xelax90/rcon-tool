@@ -108,17 +108,28 @@ return [
                         '-ServerPlatform' => 'All',
                         // Dino wipe on startup
                         '-ForceRespawnDinos' => null,
-                        // Configure exclusive join by entering player EOS ids
-                        '-exclusivejoin' => [
-                            'EOSID1',
-                            'EOSID2',
-                        ],
+                        // Enable exclusive join. Players IDs must be entered in the ArkConfig::CONFIG_TYPE_PLAYER_EXCLUSIVE_JOIN_LIST section
+                        '-exclusivejoin' => null,
                         '-UseBattlEye' => null,
                         // Configure mods
                         '-Mods' => [
                             939228, // QoL+
                             983782, // Dear Jane
                         ],
+                    ],
+                    ArkConfig::CONFIG_TYPE_PLAYER_EXCLUSIVE_JOIN_LIST => [
+                        // Configure exclusive join by entering player EOS ids
+                        'EOSID1',
+                        'EOSID2',
+                    ],
+                    ArkConfig::CONFIG_TYPE_PLAYER_JOIN_NO_CHECK_LIST => [
+                        // Configure No Join Check players by entering EOS ids
+                    ],
+                    ArkConfig::CONFIG_TYPE_ALLOWED_CHEATER_ACCOUNT_IDS => [
+                        // Configure admins by entering EOS ids
+                    ],
+                    ArkConfig::CONFIG_TYPE_BANLIST => [
+                        // Configure banned players by entering EOS ids
                     ],
                     // Adjust Game.ini
                     ArkConfig::CONFIG_TYPE_GAME => [

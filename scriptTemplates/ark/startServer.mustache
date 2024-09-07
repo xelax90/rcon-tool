@@ -18,6 +18,10 @@ CALL %STEAMCMD% +force_install_dir %APP_INSTALL_DIR% +login anonymous +app_updat
 
 copy %~dp0\Game.ini %APP_INSTALL_DIR%\ShooterGame\Saved\Config\WindowsServer\Game.ini
 copy %~dp0\GameUserSettings.ini %APP_INSTALL_DIR%\ShooterGame\Saved\Config\WindowsServer\GameUserSettings.ini
+copy %~dp0\PlayersExclusiveJoinList.txt %APP_INSTALL_DIR%\ShooterGame\Binaries\Win64\PlayersExclusiveJoinList.txt
+copy %~dp0\PlayersJoinNoCheckList.txt %APP_INSTALL_DIR%\ShooterGame\Binaries\Win64\PlayersJoinNoCheckList.txt
+copy %~dp0\AllowedCheaterAccountIDs.txt %APP_INSTALL_DIR%\ShooterGame\Binaries\Win64\AllowedCheaterAccountIDs.txt
+copy %~dp0\Banlist.txt %APP_INSTALL_DIR%\ShooterGame\Binaries\Win64\Banlist.txt
 
 echo Starting ARK: Survival Ascended Server
 
