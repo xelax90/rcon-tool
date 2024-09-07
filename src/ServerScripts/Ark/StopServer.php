@@ -48,17 +48,22 @@ class StopServer extends AbstractScript
         }
 
         $this->runCommand($rcon, new SaveWorld());
+        $rcon->disconnect();
 
         $messageCommand = new ServerChatWithTemplate('Server shutdown in %s');
         for ($i = 0; $i < count($messageIntervals); $i++) {
             $currentInterval = $messageIntervals[$i];
             $nextInterval = $messageIntervals[$i+1] ?? 0;
+            // Disconnect/Connect is required for long pauses between commands as it is otherwise closed by the server
+            $rcon->connect();
             $this->runCommand($rcon, $messageCommand, intervalToString::compute($currentInterval));
+            $rcon->disconnect();
 
             $diff = $currentInterval - $nextInterval;
             sleep($diff);
         }
 
+        $rcon->connect();
         $this->runCommand($rcon, new ServerChat(sprintf('Final Saveworld 1')));
         $this->runCommand($rcon, new SaveWorld());
         sleep(5);
