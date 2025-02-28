@@ -5,15 +5,18 @@ use RconManager\ServerCommand\VRising\AnnounceRestart;
 use RconManager\ServerCommand\VRising\AnnounceWithTemplate;
 use RconManager\ServerCommand\VRising\Shutdown;
 use RconManager\Service\Config;
+use RconManager\Service\RconService;
 use RconManager\Utils\intervalToString;
-use Thedudeguy\Rcon;
 
 class StopServer extends AbstractScript
 {
     protected bool $stopImmediately = false;
 
-    public function __construct(protected Config $config)
-    {
+    public function __construct(
+        protected Config $config,
+        RconService $rconService
+    ) {
+        parent::__construct($rconService);
     }
 
     public function setStopImmediately(bool $stopImmediately): static
@@ -22,7 +25,7 @@ class StopServer extends AbstractScript
         return $this;
     }
 
-    public function run(Rcon $rcon): void
+    public function run(string $server): void
     {
         $config = $this->config->getConfig()['scripts']['shutdown'];
         
@@ -47,12 +50,12 @@ class StopServer extends AbstractScript
             $nextInterval = $messageIntervals[$i+1] ?? 0;
             if (! $shutdownInitialized) {
                 $restartMinutes = max(floor($currentInterval/60), 1);
-                echo $this->runCommand($rcon, new Shutdown($restartMinutes, sprintf("Server will restart in %d minutes", $restartMinutes)));
+                echo $this->rconService->runCommand($server, new Shutdown($restartMinutes, sprintf("Server will restart in %d minutes", $restartMinutes)));
                 $shutdownInitialized = true;
             } elseif (($currentInterval % 60) == 0) {
-                echo $this->runCommand($rcon, new AnnounceRestart($currentInterval / 60));
+                echo $this->rconService->runCommand($server, new AnnounceRestart($currentInterval / 60));
             } elseif ($currentInterval < 60) {
-                echo $this->runCommand($rcon, $messageCommand, intervalToString::compute($currentInterval));
+                echo $this->rconService->runCommand($server, $messageCommand, intervalToString::compute($currentInterval));
             }
 
             $diff = $currentInterval - $nextInterval;

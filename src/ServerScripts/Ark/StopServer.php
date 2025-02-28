@@ -7,15 +7,18 @@ use RconManager\ServerCommand\Ark\SaveWorld;
 use RconManager\ServerCommand\Ark\ServerChat;
 use RconManager\ServerCommand\Ark\ServerChatWithTemplate;
 use RconManager\Service\Config;
+use RconManager\Service\RconService;
 use RconManager\Utils\intervalToString;
-use Thedudeguy\Rcon;
 
 class StopServer extends AbstractScript
 {
     protected bool $stopImmediately = false;
 
-    public function __construct(protected Config $config)
-    {
+    public function __construct(
+        protected Config $config,
+        RconService $rconService
+    ) {
+        parent::__construct($rconService);
     }
 
     public function setStopImmediately(bool $stopImmediately): static
@@ -24,14 +27,14 @@ class StopServer extends AbstractScript
         return $this;
     }
 
-    public function run(Rcon $rcon): void
+    public function run(string $server): void
     {
         $config = $this->config->getConfig()['scripts']['shutdown'];
         
         $stopImmediately = $this->stopImmediately;
         if (! $stopImmediately) {
             // Faster shutdown if no players are connected
-            $playerList = trim($this->runCommand($rcon, new ListPlayers()));
+            $playerList = trim($this->rconService->runCommand($server, new ListPlayers()));
             if ($playerList === 'No Players Connected') {
                 $stopImmediately = true;
             }
@@ -47,31 +50,31 @@ class StopServer extends AbstractScript
             $messageIntervals = [10, 5, 4, 3, 2, 1];
         }
 
-        $this->runCommand($rcon, new SaveWorld());
-        $rcon->disconnect();
+        $this->rconService->runCommand($server, new SaveWorld());
+        $this->rconService->disconnect($server);
 
         $messageCommand = new ServerChatWithTemplate('Server shutdown in %s');
         for ($i = 0; $i < count($messageIntervals); $i++) {
             $currentInterval = $messageIntervals[$i];
             $nextInterval = $messageIntervals[$i+1] ?? 0;
             // Disconnect/Connect is required for long pauses between commands as it is otherwise closed by the server
-            $rcon->connect();
-            $this->runCommand($rcon, $messageCommand, intervalToString::compute($currentInterval));
-            $rcon->disconnect();
+            $this->rconService->connect($server);
+            $this->rconService->runCommand($server, $messageCommand, intervalToString::compute($currentInterval));
+            $this->rconService->disconnect($server);
 
             $diff = $currentInterval - $nextInterval;
             sleep($diff);
         }
 
-        $rcon->connect();
-        $this->runCommand($rcon, new ServerChat(sprintf('Final Saveworld 1')));
-        $this->runCommand($rcon, new SaveWorld());
+        $this->rconService->connect($server);
+        $this->rconService->runCommand($server, new ServerChat(sprintf('Final Saveworld 1')));
+        $this->rconService->runCommand($server, new SaveWorld());
         sleep(5);
-        $this->runCommand($rcon, new ServerChat(sprintf('Final Saveworld 2')));
-        $this->runCommand($rcon, new SaveWorld());
+        $this->rconService->runCommand($server, new ServerChat(sprintf('Final Saveworld 2')));
+        $this->rconService->runCommand($server, new SaveWorld());
         sleep(5);
-        $this->runCommand($rcon, new ServerChat(sprintf('SHUTDOWN')));
+        $this->rconService->runCommand($server, new ServerChat(sprintf('SHUTDOWN')));
         sleep(5);
-        $this->runCommand($rcon, new DoExit());
+        $this->rconService->runCommand($server, new DoExit());
     }
 }

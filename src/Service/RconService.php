@@ -3,9 +3,10 @@ namespace RconManager\Service;
 
 use RconManager\ServerCommand\Command;
 use RconManager\ServerScripts\ServerScriptInterface;
+use ReflectionObject;
 use RuntimeException;
 use SteamCondenser\Servers\SourceServer;
-use Thedudeguy\Rcon;
+use xPaw\SourceQuery\SourceQuery;
 
 class RconService
 {
@@ -13,7 +14,8 @@ class RconService
     const SERVER_TYPE_ARK = 'ark';
     const SERVER_TYPE_PALWORLD = 'palworld';
 
-    protected $connections = [];
+    /** @var SourceQuery[] */
+    protected $sourceConnections = [];
 
     public function __construct(
         protected Config $config
@@ -25,22 +27,38 @@ class RconService
         return $this->config->getServers();
     }
 
-    public function connect(string $server): Rcon
+    public function connect(string $server): SourceQuery
     {
-        if (! isset($this->connections[$server])) {
+        if (! isset($this->sourceConnections[$server])) {
+            $this->sourceConnections[$server] = new SourceQuery();
+        }
+        if (! $this->sourceQueryIsConnected($this->sourceConnections[$server])) {
             $serverInfo = $this->config->getServerConfig($server);
-            $rcon = new Rcon(
+            $rcon = $this->sourceConnections[$server];
+            $rcon->Connect(
                 $serverInfo['host'],
                 $serverInfo['port'],
-                $serverInfo['password'],
-                $this->config->getConfig()['rcon']['timeout'] ?? 3
+                $this->config->getConfig()['rcon']['timeout'] ?? 3,
+                SourceQuery::SOURCE
             );
-            if (! @$rcon->connect()) {
-                throw new RuntimeException(sprintf('Failed to connect to server %s', $server));
-            }
-            $this->connections[$server] = $rcon;
+            $rcon->SetRconPassword($serverInfo['password']);
         }
-        return $this->connections[$server];
+        return $this->sourceConnections[$server];
+    }
+
+    protected function sourceQueryIsConnected(SourceQuery $rcon)
+    {
+        $r = new ReflectionObject($rcon);
+        $p = $r->getProperty('Connected');
+        $p->setAccessible(true);
+        return $p->getValue($rcon);
+    }
+
+    public function disconnect(string $server)
+    {
+        if (isset($this->sourceConnections[$server])) {
+            $this->sourceConnections[$server]->Disconnect();
+        }
     }
 
     public function connectSteam(string $server)
@@ -65,8 +83,7 @@ class RconService
             throw new RuntimeException(sprintf('Server type %s is not supported by script "%s"', $serverInfo['type'], get_class($script)));
         }
 
-        $rcon = $this->connect($server);
-        $script->run($rcon);
+        $script->run($server);
     }
 
     public function runCommand(string $server, Command $command, ...$arguments)
@@ -81,7 +98,7 @@ class RconService
 
         $rcon = $this->connect($server);
         $execCommand = $command->getRconCommand(...$arguments);
-        $response = $rcon->sendCommand($execCommand);
+        $response = $rcon->Rcon($execCommand);
         if (! $command->validateResponse($response)) {
             throw new RuntimeException(sprintf('Command "%s" failed with response "%s"', $execCommand, $response));
         }

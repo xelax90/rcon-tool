@@ -4,24 +4,27 @@ namespace RconManager\ServerScripts\Palworld;
 use RconManager\ServerCommand\Palworld\SaveWorld as SaveWorldCommand;
 use RconManager\ServerCommand\Palworld\ServerChat;
 use RconManager\Service\Config;
-use Thedudeguy\Rcon;
+use RconManager\Service\RconService;
 
 class SaveWorld extends AbstractScript
 {
-    public function __construct(protected Config $config)
-    {
+    public function __construct(
+        protected Config $config,
+        RconService $rconService
+    ) {
+        parent::__construct($rconService);
     }
 
-    public function run(Rcon $rcon): void
+    public function run(string $server): void
     {
         $config = $this->config->getConfig()['scripts']['saveworld'];
         
         if ($config['showMessage'] ?? false) {
             $message = $config['message'] ?? 'A world save is about to be performed';
-            $this->runCommand($rcon, new ServerChat($message));
+            $this->rconService->runCommand($server, new ServerChat($message));
             sleep($config['messageLeadTime'] ?? 10);
         }
 
-        $this->runCommand($rcon, new SaveWorldCommand());
+        $this->rconService->runCommand($server, new SaveWorldCommand());
     }
 }

@@ -41,7 +41,7 @@ class SaveWorldCommand extends AbstractServerCommand
         $server = $input->getArgument('server');
 
         $this->rconService->runScript($server, $this->script);
-        
+
         return Command::SUCCESS;
     }
 }
