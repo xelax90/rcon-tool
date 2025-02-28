@@ -1,0 +1,81 @@
+<?php
+
+use RconManager\Utils\PalworldConfig;
+
+return [
+    'rcon_servers' => [
+        // The server is referenced by this key in all commands
+        'myPalworldServer' => [
+            'type' => 'palworld',
+            // RCON Host
+            'host' => 'localhost',
+            // RCON Port
+            'port' => 25575,
+            // RCON Password
+            'password' => 'pw123456789',
+            'management' => [
+                // Local Server Management settings
+                'palworld' => [
+                    // Use configuration templates to save presets
+                    // Using templates optional
+                    'configTemplate' => 'myConfigPreset',
+                    // Adjust settings from config preset for this server
+                    'gameSettings' => [
+                        // Command line options.
+                        // See https://docs.palworldgame.com/settings-and-operation/arguments#arguments-list
+                        PalworldConfig::CONFIG_TYPE_COMMANDLINE_OPTION => [
+                            // Game Port
+                            '-port' => 8211,
+                        ],
+                        // Adjust PalWorldSettings.ini
+                        // See https://docs.palworldgame.com/settings-and-operation/configuration
+                        PalworldConfig::CONFIG_TYPE_GAME => [
+                            '/Script/Pal.PalGameWorldSettings' => [
+                                'OptionSettings' => [
+                                    // Must be true to enable RCON
+                                    'RCONEnabled' => true,
+                                    // RCON Port (must be same as above)
+                                    'RCONPort' => 25575,
+                                    // Server name
+                                    'ServerName' => 'My Awesome Palworld Server',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]
+    ],
+    'management' => [
+        'palworld' => [
+            // Mustache template for server install path
+            'localInstallDirTemplate' => 'C:\Servers\palworld-{{server}}',
+            // Set up a configuraiton template.
+            'configTemplates' => [
+                'myConfigPreset' => [
+                    // Command line options.
+                    // See https://docs.palworldgame.com/settings-and-operation/arguments#arguments-list
+                    PalworldConfig::CONFIG_TYPE_COMMANDLINE_OPTION => [
+                        '-publiclobby' => null,
+                        '-players' => 20,
+                    ],
+                    // Adjust PalWorldSettings.ini
+                    // See https://docs.palworldgame.com/settings-and-operation/configuration
+                    PalworldConfig::CONFIG_TYPE_GAME => [
+                        '/Script/Pal.PalGameWorldSettings' => [
+                            'OptionSettings' => [
+                                // Platforms allowed to connect: Steam or Xbox or Mac
+                                'AllowConnectPlatform' => 'Xbox',
+                                'ServerPlayerMaxNum' => 20,
+                                // Passwort to join server
+                                'ServerPassword' => 'pw123456789',
+                                // Admin password
+                                'AdminPassword' => 'pw123456789',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+];

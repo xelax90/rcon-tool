@@ -2,6 +2,7 @@
 This tool helps managing game servers utilizing RCON and the Steam Query API. Currently the following game servers are supported:
 - Ark Survival Ascended
 - V Rising
+- Palworld
 
 ## System requirements
 - Windows 10
@@ -29,6 +30,9 @@ This tool helps managing game servers utilizing RCON and the Steam Query API. Cu
     - The example in this template shows a working cluster setup
   - vrising-local-server.php.dist
     - Use this template to run and manage local vrising server
+  - palworld-local-server.php.dist
+    - Use this template to run and manage local palworld servers
+    - The example in this template shows a working password protected community server setup
 
 
 ## Usage
@@ -81,6 +85,10 @@ For servers running with this tool I recommend following these steps:
   - `restartServer.bat`: Stop and start the server again. Online players will be notified and the world will be saved.
   - `Game.ini`: This is the Game.ini configuration file. It will be copied to the server on every server start
   - `GameUserSettings.ini`: This is the GameUserSettings.ini configuration file. It will be copied to the server on every server start
+  - `PlayersExclusiveJoinList.txt`: List of players allowed to join if the `-exclusivejoin` option is enabled. It will be copied to the server on every server start
+  - `PlayersJoinNoCheckList.txt`: List of players allowed to join without entering a password. It will be copied to the server on every server start
+  - `AllowedCheaterAccountIDs.txt`: List of admin players. It will be copied to the server on every server start
+  - `Banlist.txt`: List of banned players. It will be copied to the server on every server start
 
 #### Setting up Ark Server
 Disclaimer: This is not a full guide to configuring your Ark Server. These instructions set up the server ready to be configured to your needs. For Setting Up and configuring the Ark Server always refer to the official wiki at https://ark.wiki.gg/wiki/Server_configuration or the official Ark Discord.
@@ -110,4 +118,42 @@ For servers running with this tool I recommend following these steps:
         - Action: Start program. Select the generated restartServer.bat file
 - The server should now be up and running and will check for updates every 15 minutes.
 - If the script detects a required update, the server will be shut down using the `rcon:ark:stop-server` command and then started again.
+- All online players will be notified about the restart according to shutdown intervals configuration and the world will be saved before the restart happens
+
+### Palworld
+#### Generating Scripts
+- For Palworld the following scripts are generated:
+  - `startServer.bat`: Install, update and runs the server.
+  - `crontask.bat`: script should be set up as cronjob. It checks if the server needs an update. If it detects a new update, the server will be stopped (notifying online players before it shuts down) and started again using `startServer.bat`.
+  - `restartServer.bat`: Stop and start the server again. Online players will be notified and the world will be saved.
+  - `PalWorldSettings.ini`: This is the PalWorldSettings.ini configuration file. It will be copied to the server on every server start
+
+#### Setting up Palworld Server
+Disclaimer: This is not a full guide to configuring your Palworld Server. These instructions set up the server ready to be configured to your needs. For Setting Up and configuring the Palworld Server always refer to the official documentation at https://docs.palworldgame.com/ or the official Palworld Discord.
+
+For servers running with this tool I recommend following these steps:
+- Copy the provided `config/palworld-local-server.php.dist` to `config/palworld-local-server.php` and adjust it to your needs. The example provides a configuration for a password protected community server.
+- Generate the scripts and server configuration using `php application.php rcon:generate-scripts myPalworldServer`
+- Run the generated script `generated\myPalworldServer\startServer.bat` file by double-clicking it.
+- Wait until the server is installed and started
+- You should be able to connect to your server now. To find your server you have to click "Start Multiplayer" and click the "Community-Server" button. Then type the server name into the search and click "Search".
+- Setting up automated updates with scheduled tasks:
+    - Open the Windows Scheduled Tasks.
+    - Create two new new simple tasks with the following settings:
+        - Name: Palworld Server Update
+        - Daily at 00:00:00, Repeat every day
+        - Action: Start program. Select the generated crontask.bat file
+        - After the creation is finished, doubleclick the created task
+        - Select Trigger
+        - Doubleclick on the daily trigger
+        - Check the Repeat checkbox and select 15 minutes
+        - Click OK and save the task
+- Setting up automated server restart:
+    - Open the Windows Scheduled Tasks.
+    - Create two new new simple tasks with the following settings:
+        - Name: Palworld Server Restart
+        - Daily at 00:00:00 (Or any other time that you want to run the restart at), Repeat every day
+        - Action: Start program. Select the generated restartServer.bat file
+- The server should now be up and running and will check for updates every 15 minutes.
+- If the script detects a required update, the server will be shut down using the `rcon:palworld:stop-server` command and then started again.
 - All online players will be notified about the restart according to shutdown intervals configuration and the world will be saved before the restart happens
