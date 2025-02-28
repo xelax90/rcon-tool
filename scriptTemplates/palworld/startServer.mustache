@@ -1,0 +1,44 @@
+@echo off
+if EXIST %~dp0\startServer.lock (
+    exit
+)
+
+netstat -na | find ":{{serverPort}} "
+if %errorlevel%==0 (
+    exit
+)
+
+copy /y NUL %~dp0\startServer.lock >NUL
+
+SET STEAMCMD={{steamcmdPath}}
+SET APP_INSTALL_DIR={{installDir}}
+
+echo Updating Palworld
+CALL %STEAMCMD% +force_install_dir %APP_INSTALL_DIR% +login anonymous +app_update 2394010 validate +quit
+
+copy %~dp0\PalWorldSettings.ini %APP_INSTALL_DIR%\Pal\Saved\Config\WindowsServer\PalWorldSettings.ini
+
+echo "Starting Palworld Dedicated Server - PRESS CTRL-C to exit"
+
+cd /d %APP_INSTALL_DIR%
+start PalServer.exe {{{serverStartParameters}}}
+
+set /a counter=1
+
+:startwait
+if %counter% gtr {{maxStartCounter}} (
+    goto :cleanup
+)
+
+netstat -na | find "{{serverPort}}"
+if %errorlevel%==0 (
+    goto :cleanup
+) else (
+    timeout 5
+    set /a counter=%counter%+1
+    goto :startwait
+)
+
+:cleanup
+del %~dp0\startServer.lock
+exit

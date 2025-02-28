@@ -1,8 +1,8 @@
 <?php
-namespace RconManager\Command\Ark;
+namespace RconManager\Command\Palworld;
 
 use RconManager\Command\AbstractServerCommand;
-use RconManager\ServerCommand\Ark\ListPlayers;
+use RconManager\ServerCommand\Palworld\ListPlayers;
 use RconManager\Service\RconService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 // the name of the command is what users type after "php bin/console"
-#[AsCommand(name: 'rcon:ark:list-players')]
+#[AsCommand(name: 'rcon:palworld:list-players')]
 class ListPlayersCommand extends AbstractServerCommand
 {
     public function __construct(

@@ -11,6 +11,7 @@ class RconService
 {
     const SERVER_TYPE_VRISING = 'vrising';
     const SERVER_TYPE_ARK = 'ark';
+    const SERVER_TYPE_PALWORLD = 'palworld';
 
     protected $connections = [];
 

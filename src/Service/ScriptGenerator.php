@@ -3,6 +3,7 @@ namespace RconManager\Service;
 
 use Laminas\ServiceManager\ServiceManager;
 use RconManager\ScriptGenerator\Ark;
+use RconManager\ScriptGenerator\Palworld;
 use RconManager\ScriptGenerator\ScriptGenerator as ScriptGeneratorInterface;
 use RconManager\ScriptGenerator\VRising;
 use RuntimeException;
@@ -15,6 +16,9 @@ class ScriptGenerator
         ],
         RconService::SERVER_TYPE_ARK => [
             Ark::class,
+        ],
+        RconService::SERVER_TYPE_PALWORLD => [
+            Palworld::class,
         ],
     ];
 

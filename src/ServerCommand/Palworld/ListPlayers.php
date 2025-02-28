@@ -1,8 +1,8 @@
 <?php
-namespace RconManager\ServerCommand\Ark;
+namespace RconManager\ServerCommand\Palworld;
 
 /**
- * https://ark.fandom.com/wiki/Console_commands#SaveWorld
+ * https://docs.palworldgame.com/settings-and-operation/commands
  * Save World
  */
 class ListPlayers extends AbstractCommand
@@ -14,6 +14,6 @@ class ListPlayers extends AbstractCommand
 
     public function getRconCommand(...$arguments): string
     {
-        return 'ListPlayers';
+        return 'ShowPlayers';
     }
 }

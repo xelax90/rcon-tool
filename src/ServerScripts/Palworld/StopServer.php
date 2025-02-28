@@ -1,11 +1,11 @@
 <?php
-namespace RconManager\ServerScripts\Ark;
+namespace RconManager\ServerScripts\Palworld;
 
-use RconManager\ServerCommand\Ark\DoExit;
-use RconManager\ServerCommand\Ark\ListPlayers;
-use RconManager\ServerCommand\Ark\SaveWorld;
-use RconManager\ServerCommand\Ark\ServerChat;
-use RconManager\ServerCommand\Ark\ServerChatWithTemplate;
+use RconManager\ServerCommand\Palworld\DoExit;
+use RconManager\ServerCommand\Palworld\ListPlayers;
+use RconManager\ServerCommand\Palworld\SaveWorld;
+use RconManager\ServerCommand\Palworld\ServerChat;
+use RconManager\ServerCommand\Palworld\ServerChatWithTemplate;
 use RconManager\Service\Config;
 use RconManager\Utils\intervalToString;
 use Thedudeguy\Rcon;

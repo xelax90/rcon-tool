@@ -1,8 +1,8 @@
 <?php
-namespace RconManager\Command\Ark;
+namespace RconManager\Command\Palworld;
 
 use RconManager\Command\AbstractServerCommand;
-use RconManager\ServerCommand\Ark\ListPlayers;
+use RconManager\ServerCommand\Palworld\ServerChat;
 use RconManager\Service\RconService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -12,11 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 // the name of the command is what users type after "php bin/console"
-#[AsCommand(name: 'rcon:ark:list-players')]
-class ListPlayersCommand extends AbstractServerCommand
+#[AsCommand(name: 'rcon:palworld:server-chat')]
+class ServerChatCommand extends AbstractServerCommand
 {
     public function __construct(
-        protected ListPlayers $command,
         RconService $rconService
     ) {
         parent::__construct($rconService);
@@ -26,11 +25,12 @@ class ListPlayersCommand extends AbstractServerCommand
     {
         $this
             // the command description shown when running "php bin/console list"
-            ->setDescription('List online players')
+            ->setDescription('Send Server Chat Message')
             // the command help shown when running the command with the "--help" option
-            ->setHelp('List currently connected players')
+            ->setHelp('Send Chat Message from the Server as Announcement')
         ;
         parent::configure();
+        $this->addArgument('message', InputArgument::OPTIONAL, 'Message to send');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -39,11 +39,13 @@ class ListPlayersCommand extends AbstractServerCommand
 
         $this->requestMissingInputOptions($input, $io);
         $server = $input->getArgument('server');
+        $message = $input->getArgument('message');
 
-        $players = trim($this->rconService->runCommand($server, $this->command));
-        echo $players;
-        echo PHP_EOL;
+        $command = new ServerChat($message);
+        $response = trim($this->rconService->runCommand($server, $command));
         
+        $io->writeln($response);
+
         return Command::SUCCESS;
     }
 }

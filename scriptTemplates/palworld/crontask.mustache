@@ -15,14 +15,31 @@ php {{applicationPath}}\application.php rcon:check-update {{server}}
 
 if %errorlevel%==1 (
     echo "Stopping Server"
-    php {{applicationPath}}\application.php rcon:ark:stop-server {{server}}
+    php {{applicationPath}}\application.php rcon:palworld:stop-server {{server}}
     goto :startServer
 ) else (
     echo "OK"
 )
 
 :startServer
-START "ARKSERVER" {{applicationPath}}\generated\{{server}}\startServer.bat
+START "PALWORLD" {{applicationPath}}\generated\{{server}}\startServer.bat
+
+set /a counter=1
+
+:startwait
+if %counter% gtr {{maxStartCounter}} (
+    goto :cleanup
+)
+
+netstat -na | find "{{serverPort}}"
+if %errorlevel%==0 (
+    goto :cleanup
+) else (
+    timeout 5
+    set /a counter=%counter%+1
+    goto :startwait
+)
+
 
 :cleanup
 del %~dp0\crontask.lock

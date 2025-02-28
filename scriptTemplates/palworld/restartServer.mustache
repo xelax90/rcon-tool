@@ -1,0 +1,22 @@
+@echo off
+:lockwait
+if EXIST %~dp0\crontask.lock (
+    echo "Another task is already running. Waiting.."
+    timeout 5
+    goto :lockwait
+)
+
+copy /y NUL %~dp0\crontask.lock >NUL
+
+php {{applicationPath}}\application.php rcon:check-is-running {{server}}
+
+if %errorlevel%==0 (
+    echo "Stopping Server"
+    php {{applicationPath}}\application.php rcon:palworld:stop-server {{server}}
+)
+
+timeout 20
+
+START "PALWORLD" {{applicationPath}}\generated\{{server}}\startServer.bat
+
+del %~dp0\crontask.lock
