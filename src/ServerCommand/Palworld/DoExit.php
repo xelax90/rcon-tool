@@ -9,7 +9,7 @@ class DoExit extends AbstractCommand
 {
     public function validateResponse(string $response): bool
     {
-        return trim($response) === 'Exiting...';
+        return trim($response) === 'Shutdown...';
     }
 
     public function getRconCommand(...$arguments): string

@@ -9,7 +9,7 @@ class ListPlayers extends AbstractCommand
 {
     public function validateResponse(string $response): bool
     {
-        return trim($response) == "No Players Connected" || strlen(trim($response)) > 5;
+        return strlen(trim($response)) > 5;
     }
 
     public function getRconCommand(...$arguments): string

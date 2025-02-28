@@ -13,7 +13,7 @@ class ServerChat extends AbstractCommand
 
     public function validateResponse(string $response): bool
     {
-        return trim($response) === 'Server received, But no response!!';
+        return str_starts_with(trim($response), 'Broadcasted: ');
     }
 
     public function getRconCommand(...$arguments): string

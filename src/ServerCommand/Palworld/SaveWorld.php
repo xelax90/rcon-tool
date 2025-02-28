@@ -9,7 +9,7 @@ class SaveWorld extends AbstractCommand
 {
     public function validateResponse(string $response): bool
     {
-        return trim($response) === 'World Saved';
+        return trim($response) === 'Complete Save';
     }
 
     public function getRconCommand(...$arguments): string
