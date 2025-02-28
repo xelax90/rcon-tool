@@ -28,9 +28,9 @@ class ServerChatCommand extends AbstractServerCommand
             ->setDescription('Send Server Chat Message')
             // the command help shown when running the command with the "--help" option
             ->setHelp('Send Chat Message from the Server as Announcement')
+            ->addArgument('message', InputArgument::REQUIRED, 'Message to send')
         ;
         parent::configure();
-        $this->addArgument('message', InputArgument::OPTIONAL, 'Message to send');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -43,7 +43,7 @@ class ServerChatCommand extends AbstractServerCommand
 
         $command = new ServerChat($message);
         $response = trim($this->rconService->runCommand($server, $command));
-        
+
         $io->writeln($response);
 
         return Command::SUCCESS;

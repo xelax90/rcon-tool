@@ -18,6 +18,6 @@ class ServerChat extends AbstractCommand
 
     public function getRconCommand(...$arguments): string
     {
-        return sprintf('/Broadcast %s', $this->message);
+        return sprintf('Broadcast %s', $this->message);
     }
 }
