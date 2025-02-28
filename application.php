@@ -31,6 +31,7 @@ $application->setCommandLoader(new ContainerCommandLoader($container, [
     'rcon:ark:list-players' => Command\Ark\ListPlayersCommand::class,
     'rcon:ark:stop-server' => Command\Ark\StopServerCommand::class,
     'rcon:ark:saveworld' => Command\Ark\SaveWorldCommand::class,
+    'rcon:ark:server-chat' => Command\Ark\ServerChatCommand::class,
 
     // V Rising
     'rcon:vrising:cancel-shutdown' => Command\VRising\CancelShutdownCommand::class,
@@ -42,6 +43,7 @@ $application->setCommandLoader(new ContainerCommandLoader($container, [
     'rcon:palworld:list-players' => Command\Palworld\ListPlayersCommand::class,
     'rcon:palworld:stop-server' => Command\Palworld\StopServerCommand::class,
     'rcon:palworld:saveworld' => Command\Palworld\SaveWorldCommand::class,
+    'rcon:palworld:server-chat' => Command\Palworld\ServerChatCommand::class,
 ]));
 
 $application->run();
